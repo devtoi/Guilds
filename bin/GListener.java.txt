@@ -1,0 +1,86 @@
+/*import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+
+class GListener extends PluginListener{
+	
+	private ArrayList<Guild> guilds = new ArrayList<Guild>();
+	private static final Logger logger = Logger.getLogger("Minecraft.Guilds");
+	private ArrayList<String> pendingGuildInvites = new ArrayList<String>();
+	private PropertiesFile properties = new PropertiesFile("Guilds" + File.separator + "guilds.properties");
+	static int guildAreaExpansion = 1;
+	static int guildAreaStartSize = 1;
+	private ArrayList<Command> guildCommands = new ArrayList<Command>();
+	private static ArrayList<GuildKind> guildKinds = new ArrayList<GuildKind>();
+	private ArrayList<Party> partys = new ArrayList<Party>();
+
+	public GListener()
+	{
+		
+	}
+	
+	// Not bukkited yet
+	public boolean onOpenInventory(Player player, Inventory inventory) {
+		for (Guild guild : this.guilds)
+		{
+			if (guild.isNearArea(player.getLocation().x, player.getLocation().z, 5))
+			{
+				if (this.getPlayerGuild(player.getName()).equalsIgnoreCase(guild.getName()))
+				{
+					if (inventory.getContentsSize() == 27 || inventory.getContentsSize() == 54)
+					{
+						if (guild.getPlayerRank(player.getName()) >= guild.getPerChest())
+						{
+							return false;
+						}
+						else
+							return true;
+					}
+					else if (inventory.getContentsSize() == 1)
+					{
+						if (guild.getPlayerRank(player.getName()) >= guild.getPerWorkbench())
+						{
+							return false;
+						}
+						else
+							return true;
+					}
+					else if (inventory.getContentsSize() == 3)
+					{
+						if (guild.getPlayerRank(player.getName()) >= guild.getPerFurnace())
+						{
+							return false;
+						}
+						else
+							return true;
+					}
+					else
+						return false;
+				}
+				else
+					return true;
+			}
+		}
+        return false;
+    }
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+}
+*/
