@@ -1,7 +1,6 @@
 package org.toi.guilds;
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Logger;
 
 import org.bukkit.Server;
 import org.bukkit.event.Event;
@@ -20,10 +19,10 @@ public class Guilds extends JavaPlugin{
 	    private GBlockListener blockListener = new GBlockListener(gholder);
 	    private GEntityListener entityListener = new GEntityListener(gholder);
 	    
-	    public Guilds(PluginLoader pluginLoader, Server instance, PluginDescriptionFile desc, File plugin, ClassLoader cLoader) {
-	        super(pluginLoader, instance, desc, plugin, cLoader);
+	    public Guilds(PluginLoader pluginLoader, Server instance, PluginDescriptionFile desc, File folder, File plugin, ClassLoader cLoader) {
+	        super(pluginLoader, instance, desc, folder, plugin, cLoader);
 	        name = "Guilds";
-	        version = "v1.0 (Codger)";
+	        version = "v1.1 (Durslar)";
 	        GHolder.plugin = this;
 
 	        registerEvents();
@@ -82,38 +81,39 @@ public class Guilds extends JavaPlugin{
 
 	    public void initiateGuildCommands()
 	    {
-	    	gholder.addCmd("/addguild", "[guildname] [kind]", "Adds an empty guild with you as admin (leaving your old one)");
-	        gholder.addCmd("/removeanyguild", "[guild]", "Removes any guild");
-	        gholder.addCmd("/gkindlist", "", "Shows a list of avaliable guild kinds");
-	        gholder.addCmd("/removeguild", "", "Removes your guild");
-	        gholder.addCmd("/saveguild", "[guild]", "Saves a guild to a file");
-	        gholder.addCmd("/loadguild", "[guild]", "Loads and adds a guild from a file");
-	        gholder.addCmd("/saveallguilds", "", "Saves all guilds to their files");
-	        gholder.addCmd("/guildlist", "", "Shows list of existing guilds joinable");
-	        gholder.addCmd("/reloadguilds", "", "Reloads the guilds from their files");
-	        gholder.addCmd("/joinguild", "[guild]", "Joins a guild");
-	        gholder.addCmd("/leaveguild", "", "Leaves a guild");
-	        gholder.addCmd("/guildinvite", "[player]", "Invites a player to a guild");
-	        gholder.addCmd("/guildkick", "[player]", "Kicks a player from a guild");
-	        gholder.addCmd("/setguildarea", "", "Set the guild area");
-	        gholder.addCmd("/myguild", "", "Shows your guild");
-	        gholder.addCmd("/gset", "[function] [value] ", "Change guild values");
-	        gholder.addCmd("/gpermlist", "", "List guild permissions");
-	        gholder.addCmd("/gfunclist", "", "List guild functions that is adjustable");
-	        gholder.addCmd("/gmembers", "<guild>", "List members in a guild");
-	        gholder.addCmd("/gadmins", "<guild>", "List admins in a guild");
-	        gholder.addCmd("/gpromote", "[player]", "Promote a player in your guild");
-	        gholder.addCmd("/gdemote", "[player]", "Demote a player in your guild");
-	        gholder.addCmd("/gjyes", "", "Answer yes on a guild invite");
-	        gholder.addCmd("/gjno", "", "Answer no on a guild invite");
-	        gholder.addCmd("/gupgrade", "", "Try to upgrade your guild");
-	        gholder.addCmd("/gnextlevel", "", "Print out what is needed for the next guild level");
-	        gholder.addCmd("/gturnin", "[itemid] [amount]", "Turn in stuff to your \"guild leveler\"");
-	        gholder.addCmd("/setguildhome", "", "Sets the guild warp point");
-	        gholder.addCmd("/guildhome", "", "Teleport to your guild area");
-	        gholder.addCmd("/gactivate", "", "Activates a guild so it is loaded on restart");
-	        gholder.addCmd("/pstart", "[partyname]", "Starts a party");
-	        gholder.addCmd("/pjoin", "[party]", "Joins a party");
-	        gholder.addCmd("/pleave", "", "Leaves a party");
+	    	gholder.addCmd("create", "[guildname] [kind]", "Adds an empty guild with you as admin (leaving your old one)");
+	        gholder.addCmd("removeany", "[guild]", "Removes any guild");
+	        gholder.addCmd("kinds", "", "Shows a list of avaliable guild kinds");
+	        gholder.addCmd("remove", "", "Removes your guild");
+	        gholder.addCmd("save", "[guild]", "Saves a guild to a file");
+	        gholder.addCmd("load", "[guild]", "Loads and adds a guild from a file");
+	        gholder.addCmd("saveall", "", "Saves all guilds to their files");
+	        gholder.addCmd("list", "", "Shows list of existing guilds joinable");
+	        gholder.addCmd("reloadall", "", "Reloads the guilds from their files");
+	        gholder.addCmd("join", "[guild]", "Joins a guild");
+	        gholder.addCmd("leave", "", "Leaves a guild");
+	        gholder.addCmd("invite", "[player]", "Invites a player to a guild");
+	        gholder.addCmd("kick", "[player]", "Kicks a player from a guild");
+	        gholder.addCmd("setarea", "", "Set the guild area");
+	        gholder.addCmd("me", "", "Shows your guild");
+	        gholder.addCmd("set", "[function] [value] ", "Change guild values");
+	        gholder.addCmd("permissions", "", "List guild permissions");
+	        gholder.addCmd("functions", "", "List guild functions that is adjustable");
+	        gholder.addCmd("members", "<guild>", "List members in a guild");
+	        gholder.addCmd("admins", "<guild>", "List admins in a guild");
+	        gholder.addCmd("promote", "[player]", "Promote a player in your guild");
+	        gholder.addCmd("demote", "[player]", "Demote a player in your guild");
+	        gholder.addCmd("accept", "", "Accept a guild invite");
+	        gholder.addCmd("decline", "", "Decline a guild invite");
+	        gholder.addCmd("upgrade", "", "Try to upgrade your guild");
+	        gholder.addCmd("nextlevel", "", "Print out what is needed for the next guild level");
+	        gholder.addCmd("turnin", "[itemid] [amount]", "Turn in stuff to your \"guild leveler\"");
+	        gholder.addCmd("sethome", "", "Sets the guild warp point");
+	        gholder.addCmd("home", "", "Teleport to your guild area");
+	        gholder.addCmd("activate", "", "Activates a guild so it is loaded on restart");
+	        gholder.addCmd("pstart", "[partyname]", "Starts a party");
+	        gholder.addCmd("pjoin", "[party]", "Joins a party");
+	        gholder.addCmd("pleave", "", "Leaves a party");
+	        gholder.addCmd("cmd", "", "Shows this list");
 	    }
 }

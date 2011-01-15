@@ -20,11 +20,6 @@ public class tPermissions {
 	{
 		file = new File(filePath);
 	}
-	
-	public tPermissions()
-	{
-		
-	}
 
 	public boolean canPlayerUseCommand(String player, String command)
 	{
@@ -44,7 +39,7 @@ public class tPermissions {
 		if (!this.hashPerms.containsKey(cmd))
 		{
 			ArrayList<String> als = new ArrayList<String>();
-			als.add("---");
+			als.add("---"); // Hashtables doesn't allow nulls
 			this.hashPerms.put(cmd, als);
 		}
 	}

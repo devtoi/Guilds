@@ -31,7 +31,7 @@ public final class GHolder {
 		return ChatColor.AQUA + "[Guilds] " + ChatColor.YELLOW;
 	}
 	
-	public boolean playerHasEnoughItem(Player player, int iid, int amount)
+	public boolean playerHasEnoughItem(Player player, Material mat, int amount)
 	{/*
 		PlayerInventory inv = new PlayerInventory(player);
 		if (inv.hasItem(iid, amount))
@@ -41,13 +41,13 @@ public final class GHolder {
 		return true;// TODO remove this
 	}
 	
-	public void playerTakeItems(Player player, int iid, int amount)
+	public void playerTakeItems(Player player, Material mat, int amount)
 	{/*
 		PlayerInventory inv = new PlayerInventory(player);
 		inv.removeItem(iid, amount);*/
 	}
 	
-	public void sendTurninItems (Player player, int id, int kAmount)
+	public void sendTurninItems (Player player, Material mat, int kAmount)
 	{/*
 		String itemName = etc.getDataSource().getItem(id);
 		player.sendMessage("You turned in " + kAmount + " " + itemName);*/
@@ -385,13 +385,12 @@ public final class GHolder {
 	
 	public void sendMsgToPlayer(String playerName, String message)
 	{
-		try
+		Player player = GHolder.plugin.getServer().getPlayer(playerName);
+		if (player != null)
 		{
-			Player player = this.plugin.getServer().getPlayer(playerName);
 			if (player.isOnline())
 				player.sendMessage(message);
 		}
-		catch(NullPointerException npe){}
 	}
 	
 	public String inviteToGuild(String guildName, String playerName, String adderName)

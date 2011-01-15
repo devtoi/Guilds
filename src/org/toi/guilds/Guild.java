@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Player;
 
 class Guild {
@@ -683,8 +684,8 @@ class Guild {
 		return color;
 	}
 
-	public void turnInItems(Player player, int itemIndex, int amount)
-	{
+	public void turnInItems(Player player, Material mat, int amount)
+	{/*
 		boolean hasItem = false;
 		int itemPlace = -1;
 		for (int i = 0; i < this.items.size(); i++)
@@ -700,7 +701,7 @@ class Guild {
 		if (!hasItem)
 			this.items.add(new ItemNeeded(itemIndex, amount));
 		else
-			this.items.get(itemPlace).increaseAmount(amount);
+			this.items.get(itemPlace).increaseAmount(amount);*/
 	}
 	
 	public boolean addAdmin (String name)
