@@ -1,11 +1,11 @@
 package org.toi.guilds;
 import java.util.ArrayList;
 
-import org.bukkit.Block;
+import org.bukkit.block.Block;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Player;
-import org.bukkit.Vector;
+import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
 /**
  * @author toi
  * Thanks to Raphfrk for optimization of this class.
@@ -244,7 +244,7 @@ public class TargetBlock {
     public Block getTargetBlock()
     {
         this.reset();
-        while ((getNextBlock() != null) && ((getCurrentBlock().getTypeID() == 0) || this.blockToIgnoreHasValue(getCurrentBlock().getTypeID())));
+        while ((getNextBlock() != null) && ((getCurrentBlock().getTypeId() == 0) || this.blockToIgnoreHasValue(getCurrentBlock().getTypeId())));
         return getCurrentBlock();
     }
 
@@ -259,11 +259,11 @@ public class TargetBlock {
         if (Material.getMaterial(typeID) != null)
         {
             this.reset();
-            while (getNextBlock() != null && getCurrentBlock().getTypeID() == 0);
+            while (getNextBlock() != null && getCurrentBlock().getTypeId() == 0);
             if (getCurrentBlock() != null)
             {
                 Block blk = loc.getWorld().getBlockAt(targetPos.getBlockX(), targetPos.getBlockY(), targetPos.getBlockZ());
-                blk.setTypeID(typeID);
+                blk.setTypeId(typeID);
                 return true;
             }
         }
@@ -279,7 +279,7 @@ public class TargetBlock {
     public boolean setTargetBlock(Material type)
     {
         this.reset();
-        while ((getNextBlock() != null) && ((getCurrentBlock().getTypeID() == 0) || this.blockToIgnoreHasValue(getCurrentBlock().getTypeID())));
+        while ((getNextBlock() != null) && ((getCurrentBlock().getTypeId() == 0) || this.blockToIgnoreHasValue(getCurrentBlock().getTypeId())));
         if (getCurrentBlock() != null)
         {
             Block blk = loc.getWorld().getBlockAt(targetPos.getBlockX(), targetPos.getBlockY(), targetPos.getBlockZ());
@@ -302,7 +302,7 @@ public class TargetBlock {
         if (mat != null)
         {
             this.reset();
-            while ((getNextBlock() != null) && ((getCurrentBlock().getTypeID() == 0) || this.blockToIgnoreHasValue(getCurrentBlock().getTypeID())));
+            while ((getNextBlock() != null) && ((getCurrentBlock().getTypeId() == 0) || this.blockToIgnoreHasValue(getCurrentBlock().getTypeId())));
             if (getCurrentBlock() != null)
             {
                 Block blk = loc.getWorld().getBlockAt(targetPos.getBlockX(), targetPos.getBlockY(), targetPos.getBlockZ());
@@ -320,7 +320,7 @@ public class TargetBlock {
      */
     public Block getFaceBlock()
     {
-        while ((getNextBlock() != null) && ((getCurrentBlock().getTypeID() == 0) || this.blockToIgnoreHasValue(getCurrentBlock().getTypeID())));
+        while ((getNextBlock() != null) && ((getCurrentBlock().getTypeId() == 0) || this.blockToIgnoreHasValue(getCurrentBlock().getTypeId())));
         if (getCurrentBlock() != null)
         {
             return getPreviousBlock();
@@ -344,7 +344,7 @@ public class TargetBlock {
             if (getCurrentBlock() != null)
             {
                 Block blk = loc.getWorld().getBlockAt(prevPos.getBlockX(), prevPos.getBlockY(), prevPos.getBlockZ());
-                blk.setTypeID(typeID);
+                blk.setTypeId(typeID);
                 return true;
             }
         }
@@ -445,7 +445,7 @@ public class TargetBlock {
             Block blk = getCurrentBlock();
             if (blk != null)
             {
-                blk.setTypeID(typeID);
+                blk.setTypeId(typeID);
                 return true;
             }
         }
@@ -511,7 +511,7 @@ public class TargetBlock {
             Block blk = getPreviousBlock(); 
             if (blk != null)
             {
-                blk.setTypeID(typeID);
+                blk.setTypeId(typeID);
                 return true;
             }
         }

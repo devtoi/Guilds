@@ -1,7 +1,7 @@
 package org.toi.guilds;
-import org.bukkit.Player;
-import org.bukkit.event.entity.EntityDamagedByEntityEvent;
-import org.bukkit.event.entity.EntityDamagedEvent.DamageCause;
+import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityListener;
 
 
@@ -12,7 +12,7 @@ public class GEntityListener extends EntityListener{
     	this.gholder = gholder;
     }
 	
-	public void onEntityDamagedByEntity(EntityDamagedByEntityEvent event)
+	public void onEntityDamagedByEntity(EntityDamageByEntityEvent event)
 	{
 		DamageCause cause = event.getCause();
 		if (cause == DamageCause.ENTITY_ATTACK)

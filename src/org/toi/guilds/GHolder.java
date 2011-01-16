@@ -7,7 +7,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import org.bukkit.*;
+import org.bukkit.entity.Player;
+import org.bukkit.Material;
+import org.bukkit.ChatColor;
 import org.bukkit.plugin.Plugin;
 
 
@@ -22,7 +24,7 @@ public final class GHolder {
 	static ArrayList<GuildKind> guildKinds = new ArrayList<GuildKind>();
 	private ArrayList<Party> partys = new ArrayList<Party>();
 	static Plugin plugin;
-	private tPermissions tps = new tPermissions("Guilds" + File.separator + "permissions.txt");
+	private tPermissions tps = new tPermissions("Guilds" + File.separator + "guilds.perms");
 	
 	public GHolder(){}
 	

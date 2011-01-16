@@ -22,7 +22,7 @@ public class Guilds extends JavaPlugin{
 	    public Guilds(PluginLoader pluginLoader, Server instance, PluginDescriptionFile desc, File folder, File plugin, ClassLoader cLoader) {
 	        super(pluginLoader, instance, desc, folder, plugin, cLoader);
 	        name = "Guilds";
-	        version = "v1.1 (Durslar)";
+	        version = "v1.1.1 (Durslar)";
 	        GHolder.plugin = this;
 
 	        registerEvents();

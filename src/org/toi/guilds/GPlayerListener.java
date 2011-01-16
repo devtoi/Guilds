@@ -1,7 +1,7 @@
 package org.toi.guilds;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.Player;
+import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerMoveEvent;
