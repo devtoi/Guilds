@@ -44,7 +44,7 @@ public class GPlayerListener extends PlayerListener{
 		Player player = event.getPlayer();
 		String[] split = event.getMessage().split(" ");
 		
-		if (split[0].equalsIgnoreCase("/gg") || split[0].equalsIgnoreCase("/gg"))
+		if (split[0].equalsIgnoreCase("/guild") || split[0].equalsIgnoreCase("/gg"))
 		{
 			if (split.length >= 2)
 			{
@@ -79,16 +79,16 @@ public class GPlayerListener extends PlayerListener{
 							boolean found = false;
 							for (Guild fac : gholder.getGuilds())
 							{
-								if (fac.getName().equalsIgnoreCase(split[1]))
+								if (fac.getName().equalsIgnoreCase(split[2]))
 								{	
 									fac.saveToFile();
 									found = true;
 								}
 							}
 							if (found)
-								player.sendMessage(GHolder.gString() + "guild " + split[2] + " saved.");
+								player.sendMessage(GHolder.gString() + "Guild " + split[2] + " saved.");
 							else
-								player.sendMessage(GHolder.gString() + "guild not found!");
+								player.sendMessage(GHolder.gString() + "The guild " + split[2] + " not found!");
 						}
 						else
 							player.sendMessage(GHolder.gString() + "No guild name defined");
@@ -277,18 +277,19 @@ public class GPlayerListener extends PlayerListener{
 				}
 				else if (split[1].equalsIgnoreCase("promote") && gholder.getTps().canPlayerUseCommand(player.getName(), "promote"))
 				{
-					if (split.length > 2)
+					if (split.length >= 3)
 					{
 						String line = "";
 						if (split[2] != null)
 						{
 							if (!split[2].equals(""))
 							{
-								line = "Failed to promote " + gholder.playerOnline(split[1]);
+								line = "Failed to promote " + gholder.playerOnline(split[2]) + " ";
 								boolean success = false;
+								String playerGuild = gholder.getPlayerGuild(player.getName());
 								for (Guild guild : gholder.getGuilds())
 								{
-									if (guild.getName().equalsIgnoreCase(gholder.getPlayerGuild(player.getName())))
+									if (guild.getName().equalsIgnoreCase(playerGuild))
 									{
 										if (guild.hasMember(split[2]))
 										{
@@ -296,17 +297,17 @@ public class GPlayerListener extends PlayerListener{
 											{
 												success = true;
 												guild.promotePlayer(split[2], player.getName());
-												// TODO send promote message
+												// TODO dsal
 											}
 											else
 												line = "Insufficent rank to promote " + gholder.playerOnline(split[2]) + ", rank " + guild.getPerPromote() + " needed";
 										}
 										else
-											line = gholder.playerOnline(split[1]) + " is not in " + guild.getName();
+											line = gholder.playerOnline(split[2]) + " is not in " + guild.getName();
 									}
 								}
 								if (success)
-									line = "Promoted " + gholder.playerOnline(split[2]);
+									line = "Promoted " + gholder.playerOnline(split[2]) + " ";
 							}
 						}
 						player.sendMessage(GHolder.gString() + line);
@@ -324,7 +325,7 @@ public class GPlayerListener extends PlayerListener{
 						{
 							if (!split[2].equals(""))
 							{
-								line = "Failed to demote " + gholder.playerOnline(split[2]);
+								line = "Failed to demote " + gholder.playerOnline(split[2]) + " ";
 								boolean success = false;
 								for (Guild guild : gholder.getGuilds())
 								{
@@ -353,7 +354,7 @@ public class GPlayerListener extends PlayerListener{
 									}
 								}
 								if (success)
-									line = "Demoted " + gholder.playerOnline(split[2]);
+									line = "Demoted " + gholder.playerOnline(split[2]) + " ";
 							}
 						}
 						player.sendMessage(GHolder.gString() + line);
@@ -421,7 +422,7 @@ public class GPlayerListener extends PlayerListener{
 							str += ", " + gk.getName();
 					}
 					if (!str.equals(""))
-						player.sendMessage(GHolder.gString() + ChatColor.WHITE + "Avaliable guild kinds: " + str);
+						player.sendMessage(GHolder.gString() + ChatColor.WHITE + "Avaliable guild kinds:" + str);
 					else
 						player.sendMessage(GHolder.gString() + "There are no guild kinds yet :C");
 				}
@@ -463,9 +464,9 @@ public class GPlayerListener extends PlayerListener{
 											str += ", " + gp.getName();
 										first = false;
 									}
-									player.sendMessage("Players in " + guild.getColor() + guild.getName() + ChatColor.WHITE + ":" + str);
+									player.sendMessage(GHolder.gString() + "Players in " + guild.getColor() + guild.getName() + ChatColor.WHITE + ":" + str);
+									break;
 								}
-								break;
 							}
 						}
 						else
@@ -522,9 +523,9 @@ public class GPlayerListener extends PlayerListener{
 											str += ", " + admin;
 										first = false;
 									}
-									player.sendMessage("Admins in " + guild.getColor() + guild.getName() + ChatColor.WHITE + ":" + str);
+									player.sendMessage(GHolder.gString() + "Admins in " + guild.getColor() + guild.getName() + ChatColor.WHITE + ":" + str);
+									break;
 								}
-								break;
 							}
 						}
 						else

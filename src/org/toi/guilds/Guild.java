@@ -185,35 +185,41 @@ class Guild {
 								else if (line.startsWith("kind"))
 								{
 									String[] kind = line.split(":");
-									if (!kind[1].equalsIgnoreCase("") && kind[1] != null)
+									if (kind.length >= 2)
 									{
-										boolean added = false;
-										for (GuildKind gk : GHolder.guildKinds)
+										if (!kind[1].equalsIgnoreCase("") && kind[1] != null)
 										{
-											if (gk.getName().equalsIgnoreCase(kind[1]))
+											boolean added = false;
+											for (GuildKind gk : GHolder.guildKinds)
 											{
-												this.kind = new GuildKind(gk);
-												added = true;
-												break;
+												if (gk.getName().equalsIgnoreCase(kind[1]))
+												{
+													this.kind = new GuildKind(gk);
+													added = true;
+													break;
+												}
 											}
+											if (!added)
+												System.out.println("[Guilds] Failed to load " + kind[1] + " guild kind");
 										}
-										if (!added)
-											System.out.println("[Guilds] Failed to load " + kind[1] + " guild kind");
 									}
 								}
 								else if (line.startsWith("admins"))
 								{
 									String[] splt = line.split(":");
-									if (splt[1] != null)
+									if (splt.length >= 2)
 									{
-										if (!splt[1].equals(""))
+										if (splt[1] != null)
 										{
-											String[] admins = splt[1].split(",");
-											if (admins != null)
+											if (!splt[1].equals(""))
 											{
-												for (String admin : admins)
+												String[] admins = splt[1].split(",");
+												if (admins != null)
 												{
-													this.admins.add(admin);
+													for (String admin : admins)
+													{
+														this.admins.add(admin);
+													}
 												}
 											}
 										}
@@ -221,16 +227,20 @@ class Guild {
 								}
 								else if (line.startsWith("guildspawn"))
 								{
-									String[] spawnPoint = line.split(":")[1].split(",");
-									if (spawnPoint != null)
+									String[] ln = line.split(":");
+									if (ln.length >= 2)
 									{
-										if (spawnPoint.length == 3)
+										String[] spawnPoint = ln[1].split(",");
+										if (spawnPoint != null)
 										{
-											this.guildSpawn = new Location(
-													GHolder.plugin.getServer().getWorlds()[0],
-													Double.valueOf(spawnPoint[0]), 
-													Double.valueOf(spawnPoint[1]),
-													Double.valueOf(spawnPoint[2]));
+											if (spawnPoint.length == 3)
+											{
+												this.guildSpawn = new Location(
+														GHolder.plugin.getServer().getWorlds()[0],
+														Double.valueOf(spawnPoint[0]), 
+														Double.valueOf(spawnPoint[1]),
+														Double.valueOf(spawnPoint[2]));
+											}
 										}
 									}
 								}
@@ -490,7 +500,9 @@ class Guild {
 					System.out.println("[Guilds] Guild " + this.getName() + " has no guild kind!\nPlease add one in the guild file");
 				}
 				bw.newLine();
-				bw.write("guildspawn:" + String.valueOf(this.guildSpawn.getX()) + "," + String.valueOf(this.guildSpawn.getY()) + "," + String.valueOf(this.guildSpawn.getBlockZ()));
+				bw.write("guildspawn:");
+				if (this.guildSpawn != null)
+					bw.write(String.valueOf(this.guildSpawn.getX()) + "," + String.valueOf(this.guildSpawn.getY()) + "," + String.valueOf(this.guildSpawn.getBlockZ()));
 				bw.newLine();
 				
 				bw.write("-----Permissions-----");

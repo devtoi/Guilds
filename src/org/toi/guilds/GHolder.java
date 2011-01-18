@@ -11,6 +11,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.Material;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.Plugin;
+import org.toi.util.tPermissions;
+import org.toi.util.tProperties;
 
 
 public final class GHolder {
