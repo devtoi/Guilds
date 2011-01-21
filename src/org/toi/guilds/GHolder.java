@@ -23,6 +23,7 @@ public final class GHolder {
 	private tProperties properties = new tProperties("Guilds" + File.separator + "guilds.properties");
 	static int guildAreaExpansion = 3;
 	static int guildAreaStartSize = 3;
+	static boolean useChatTag = true;
 	private ArrayList<Command> guildCommands = new ArrayList<Command>();
 	static ArrayList<GuildKind> guildKinds = new ArrayList<GuildKind>();
 	private ArrayList<Party> partys = new ArrayList<Party>();
@@ -314,40 +315,40 @@ public final class GHolder {
 		return false;
 	}
 	
-	public String getColor (String clr)
+	public ChatColor getColor (String clr)
 	{
 		if (clr.equalsIgnoreCase("black") || clr.equalsIgnoreCase("0"))
-			return "§0";
+			return ChatColor.BLACK;
 		else if (clr.equalsIgnoreCase("darkblue") || clr.equalsIgnoreCase("1"))
-			return "§1";
+			return ChatColor.DARK_BLUE;
 		else if (clr.equalsIgnoreCase("darkgreen") || clr.equalsIgnoreCase("2"))
-			return "§2";
-		else if (clr.equalsIgnoreCase("lightblue") || clr.equalsIgnoreCase("3"))
-			return "§3";
+			return ChatColor.DARK_GREEN;
+		else if (clr.equalsIgnoreCase("darkaqua") || clr.equalsIgnoreCase("3"))
+			return ChatColor.DARK_AQUA;
 		else if (clr.equalsIgnoreCase("darkred") || clr.equalsIgnoreCase("4"))
-			return "§4";
-		else if (clr.equalsIgnoreCase("purple") || clr.equalsIgnoreCase("5"))
-			return "§5";
-		else if (clr.equalsIgnoreCase("orange") || clr.equalsIgnoreCase("6"))
-			return "§6";
+			return ChatColor.DARK_RED;
+		else if (clr.equalsIgnoreCase("darkpurple") || clr.equalsIgnoreCase("5"))
+			return ChatColor.DARK_PURPLE;
+		else if (clr.equalsIgnoreCase("gold") || clr.equalsIgnoreCase("6"))
+			return ChatColor.GOLD;
 		else if (clr.equalsIgnoreCase("gray") || clr.equalsIgnoreCase("7"))
-			return "§7";
+			return ChatColor.GRAY;
 		else if (clr.equalsIgnoreCase("darkgray") || clr.equalsIgnoreCase("8"))
-			return "§8";
+			return ChatColor.DARK_GRAY;
 		else if (clr.equalsIgnoreCase("blue") || clr.equalsIgnoreCase("9"))
-			return "§9";
-		else if (clr.equalsIgnoreCase("bright green") || clr.equalsIgnoreCase("A"))
-			return "§a";
-		else if (clr.equalsIgnoreCase("teal") || clr.equalsIgnoreCase("B"))
-			return "§b";
+			return ChatColor.BLUE;
+		else if (clr.equalsIgnoreCase("green") || clr.equalsIgnoreCase("A"))
+			return ChatColor.GREEN;
+		else if (clr.equalsIgnoreCase("aqua") || clr.equalsIgnoreCase("B"))
+			return ChatColor.AQUA;
 		else if (clr.equalsIgnoreCase("red") || clr.equalsIgnoreCase("C"))
-			return "§c";
-		else if (clr.equalsIgnoreCase("pink") || clr.equalsIgnoreCase("D"))
-			return "§d";
+			return ChatColor.RED;
+		else if (clr.equalsIgnoreCase("lightpurple") || clr.equalsIgnoreCase("D"))
+			return ChatColor.LIGHT_PURPLE;
 		else if (clr.equalsIgnoreCase("yellow") || clr.equalsIgnoreCase("E"))
-			return "§e";
+			return ChatColor.YELLOW;
 		else if (clr.equalsIgnoreCase("white") || clr.equalsIgnoreCase("F"))
-			return "§f";
+			return ChatColor.WHITE;
 		else
 			return null;
 	}
@@ -913,6 +914,7 @@ public final class GHolder {
         }
         guildAreaExpansion = properties.getInt("Guild area expansion rate", 5);
         guildAreaStartSize = properties.getInt("Guild area start size", 5);
+        useChatTag = properties.getBoolean("Use guild tag in chat", useChatTag);
         properties.save();
 	}
 

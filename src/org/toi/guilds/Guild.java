@@ -653,8 +653,8 @@ class Guild {
 			return false;
 	}
 	
-	public void setColor(String color) {
-		this.color = ChatColor.valueOf(color);
+	public void setColor(ChatColor chatColor) {
+		this.color = chatColor;
 	}
 
 	public boolean isJoinable() {

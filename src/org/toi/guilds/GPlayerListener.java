@@ -15,6 +15,24 @@ public class GPlayerListener extends PlayerListener{
     public GPlayerListener(GHolder gholder) {
     	this.gholder = gholder;
     }
+    
+    public void onPlayerChat(PlayerChatEvent event)
+    {
+    	if (GHolder.useChatTag)
+    	{
+    		for (Guild guild : gholder.getGuilds())
+    		{
+    			for (GPlayer gp : guild.getPlayers())
+    			{
+    				if (gp.getName().equalsIgnoreCase(event.getPlayer().getName()))
+    				{
+    					event.setFormat(guild.getColor() + "[" + guild.getName() + "]" + ChatColor.WHITE + event.getFormat());
+    					return;
+    				}
+    			}
+    		}
+    	}
+    }
 	
 	public void onPlayerMove(PlayerMoveEvent event)
 	{
