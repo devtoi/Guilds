@@ -22,7 +22,7 @@ public class Guilds extends JavaPlugin{
 	    public Guilds(PluginLoader pluginLoader, Server instance, PluginDescriptionFile desc, File folder, File plugin, ClassLoader cLoader) {
 	        super(pluginLoader, instance, desc, folder, plugin, cLoader);
 	        name = "Guilds";
-	        version = "v1.1.6 (Durslar)";
+	        version = "v1.2.0 (Asphyx)";
 	        GHolder.plugin = this;
 
 	        registerEvents();
@@ -76,6 +76,7 @@ public class Guilds extends JavaPlugin{
 	        getServer().getPluginManager().registerEvent(Event.Type.PLAYER_COMMAND, playerListener, Priority.Normal, this);
 	        getServer().getPluginManager().registerEvent(Event.Type.BLOCK_DAMAGED, blockListener, Priority.Normal, this);
 	        getServer().getPluginManager().registerEvent(Event.Type.BLOCK_PLACED, blockListener, Priority.Normal, this);
+	        getServer().getPluginManager().registerEvent(Event.Type.BLOCK_INTERACT, blockListener, Priority.Normal, this);
 	        getServer().getPluginManager().registerEvent(Event.Type.ENTITY_DAMAGEDBY_ENTITY, entityListener, Priority.Normal, this);
 	    }
 

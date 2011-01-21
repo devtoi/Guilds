@@ -6,6 +6,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Hashtable;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -20,16 +22,7 @@ class Guild {
 	private ChatColor color;
 	private boolean joinable = true;
 	private GuildArea area = new GuildArea();
-    private int perKick = 10;
-    private int perInvite = 10;
-    private int perPromote = 10;
-    private int perDemote = 10;
-    private int perSetHome = 10;
-    private int perBuild = 10;
-    private int perDestroy = 10;
-    private int perChest = 10;
-    private int perWorkbench = 10;
-    private int perFurnace = 10;
+	private Hashtable<String, Integer> perms = new Hashtable<String, Integer>();
     private ArrayList<String> admins = new ArrayList<String>();
 	private GuildKind kind;
 	private ArrayList<ItemNeeded> items = new ArrayList<ItemNeeded>();
@@ -76,6 +69,19 @@ class Guild {
 		this.score = score;
 		this.color = color;
 		this.kind = kind;
+	}
+	
+	public void setPerm(String key, int value)
+	{
+		this.perms.put(key, value);
+	}
+	
+	public int getPerm(String key)
+	{
+		if (this.perms.containsKey(key))
+			return this.perms.get(key);
+		else
+			return 0;
 	}
 	
 	public boolean promotePlayer(String playerToPromote, String promoterName)
@@ -268,96 +274,11 @@ class Guild {
 						{
 							if (!line.startsWith("#") && !line.startsWith("//") && !line.startsWith(";") && !line.equals(""))
 							{
-								if (line.startsWith("kick"))
-								{
-									String val = line.split(":")[1];
-									if (val != null)
-									{
-										if (!val.equalsIgnoreCase(""))
-											this.perKick = Integer.valueOf(val);
-									}
-								}
-								else if (line.startsWith("invite"))
-								{
-									String val = line.split(":")[1];
-									if (val != null)
-									{
-										if (!val.equalsIgnoreCase(""))
-											this.perInvite = Integer.valueOf(val);
-									}
-								}
-								else if (line.startsWith("promote"))
-								{
-									String val = line.split(":")[1];
-									if (val != null)
-									{
-										if (!val.equalsIgnoreCase(""))
-											this.perPromote = Integer.valueOf(val);
-									}
-								}
-								else if (line.startsWith("demote"))
-								{
-									String val = line.split(":")[1];
-									if (val != null)
-									{
-										if (!val.equalsIgnoreCase(""))
-											this.perDemote = Integer.valueOf(val);
-									}
-								}
-								else if (line.startsWith("build"))
-								{
-									String val = line.split(":")[1];
-									if (val != null)
-									{
-										if (!val.equalsIgnoreCase(""))
-											this.perBuild = Integer.valueOf(val);
-									}
-								}
-								else if (line.startsWith("destroy"))
-								{
-									String val = line.split(":")[1];
-									if (val != null)
-									{
-										if (!val.equalsIgnoreCase(""))
-											this.perDestroy = Integer.valueOf(val);
-									}
-								}
-								else if (line.startsWith("set home"))
-								{
-									String val = line.split(":")[1];
-									if (val != null)
-									{
-										if (!val.equalsIgnoreCase(""))
-											this.perSetHome = Integer.valueOf(val);
-									}
-								}
-								else if (line.startsWith("use chest"))
-								{
-									String val = line.split(":")[1];
-									if (val != null)
-									{
-										if (!val.equalsIgnoreCase(""))
-											this.perChest = Integer.valueOf(val);
-									}
-								}
-								else if (line.startsWith("use workbench"))
-								{
-									String val = line.split(":")[1];
-									if (val != null)
-									{
-										if (!val.equalsIgnoreCase(""))
-											this.perWorkbench = Integer.valueOf(val);
-									}
-								}
-								else if (line.startsWith("use furnace"))
-								{
-									String val = line.split(":")[1];
-									if (val != null)
-									{
-										if (!val.equalsIgnoreCase(""))
-											this.perFurnace = Integer.valueOf(val);
-									}
-								}
+								String[] vals = line.split(":");
+								if (vals.length >= 2)
+									this.perms.put(vals[0], Integer.valueOf(vals[1]));
+								else
+									GHolder.log.info("[Guilds] Failed to interpret " + vals[0] + ":" + vals[1]);
 							}
 							line = br.readLine();
 						}
@@ -515,27 +436,13 @@ class Guild {
 				
 				bw.write("-----Permissions-----");
 				bw.newLine();
-				bw.write("invite:" + this.perInvite);
-				bw.newLine();
-				bw.write("kick:" + this.perKick);
-				bw.newLine();
-				bw.write("promote:" + this.perPromote);
-				bw.newLine();
-				bw.write("demote:" + this.perDemote);
-				bw.newLine();
-				bw.write("build:" + this.perBuild);
-				bw.newLine();
-				bw.write("destroy:" + this.perDestroy);
-				bw.newLine();
-				bw.write("set home:" + this.perSetHome);
-				bw.newLine();
-				bw.write("use chest:" + this.perChest);
-				bw.newLine();
-				bw.write("use workbench:" + this.perWorkbench);
-				bw.newLine();
-				bw.write("use furnace:" + this.perFurnace);
-				bw.newLine();
-				
+				for (Enumeration<String> e = this.perms.keys(); e.hasMoreElements();)
+				{
+					String key = (String)e.nextElement();
+					Integer val = (Integer)this.perms.get(key);
+					bw.write(key + ":" + val);
+					bw.newLine();
+				}
 				bw.write("-----Players-----");
 				bw.newLine();
 				for (GPlayer fwp : this.players)
@@ -764,86 +671,6 @@ class Guild {
 
 	public void setArea(GuildArea area) {
 		this.area = area;
-	}
-
-	public int getPerKick() {
-		return perKick;
-	}
-
-	public void setPerKick(int perKick) {
-		this.perKick = perKick;
-	}
-
-	public int getPerInvite() {
-		return perInvite;
-	}
-
-	public void setPerInvite(int perInvite) {
-		this.perInvite = perInvite;
-	}
-
-	public int getPerPromote() {
-		return perPromote;
-	}
-
-	public void setPerPromote(int perPromote) {
-		this.perPromote = perPromote;
-	}
-
-	public int getPerDemote() {
-		return perDemote;
-	}
-
-	public void setPerDemote(int perDemote) {
-		this.perDemote = perDemote;
-	}
-
-	public int getPerSetHome() {
-		return perSetHome;
-	}
-
-	public void setPerSetHome(int perSetHome) {
-		this.perSetHome = perSetHome;
-	}
-
-	public int getPerBuild() {
-		return perBuild;
-	}
-
-	public void setPerBuild(int perBuild) {
-		this.perBuild = perBuild;
-	}
-
-	public int getPerDestroy() {
-		return perDestroy;
-	}
-
-	public void setPerDestroy(int perDestroy) {
-		this.perDestroy = perDestroy;
-	}
-
-	public int getPerChest() {
-		return perChest;
-	}
-
-	public void setPerChest(int perChest) {
-		this.perChest = perChest;
-	}
-
-	public int getPerWorkbench() {
-		return perWorkbench;
-	}
-
-	public void setPerWorkbench(int perWorkbench) {
-		this.perWorkbench = perWorkbench;
-	}
-
-	public int getPerFurnace() {
-		return perFurnace;
-	}
-
-	public void setPerFurnace(int perFurnace) {
-		this.perFurnace = perFurnace;
 	}
 
 	public ArrayList<String> getAdmins() {

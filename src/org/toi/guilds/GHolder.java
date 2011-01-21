@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 import org.bukkit.entity.Player;
 import org.bukkit.Material;
@@ -27,6 +28,7 @@ public final class GHolder {
 	private ArrayList<Party> partys = new ArrayList<Party>();
 	static Plugin plugin;
 	private tPermissions tps = new tPermissions("Guilds" + File.separator + "guilds.perms");
+	public static final Logger log = Logger.getLogger("Minecraft");
 	
 	public GHolder(){}
 	
@@ -145,53 +147,83 @@ public final class GHolder {
 					{
 						if (function.equalsIgnoreCase("invite") || function.equalsIgnoreCase("inv"))
 						{
-							this.guilds.get(guildIndex).setPerInvite(rank);
+							this.guilds.get(guildIndex).setPerm("invite", rank);
 							line = "Invite permission changed to rank " + rank;
 						}
 						else if (function.equalsIgnoreCase("kick"))
 						{
-							this.guilds.get(guildIndex).setPerKick(rank);
+							this.guilds.get(guildIndex).setPerm("kick", rank);
 							line = "Kick permission changed to rank " + rank;
 						}
 						else if (function.equalsIgnoreCase("promote") || function.equalsIgnoreCase("prom"))
 						{
-							this.guilds.get(guildIndex).setPerPromote(rank);
+							this.guilds.get(guildIndex).setPerm("promote", rank);
 							line = "Promote permission changed to rank " + rank;
 						}
 						else if (function.equalsIgnoreCase("demote") || function.equalsIgnoreCase("dem"))
 						{
-							this.guilds.get(guildIndex).setPerDemote(rank);
+							this.guilds.get(guildIndex).setPerm("demote", rank);
 							line = "Demote permission changed to rank " + rank;
 						}
 						else if (function.equalsIgnoreCase("build") || function.equalsIgnoreCase("bld"))
 						{
-							this.guilds.get(guildIndex).setPerBuild(rank);
+							this.guilds.get(guildIndex).setPerm("build", rank);
 							line = "Build permission changed to rank " + rank;
 						}
 						else if (function.equalsIgnoreCase("destroy") || function.equalsIgnoreCase("dstry"))
 						{
-							this.guilds.get(guildIndex).setPerDestroy(rank);
+							this.guilds.get(guildIndex).setPerm("destroy", rank);
 							line = "Destroy permission changed to rank " + rank;
 						}
 						else if (function.equalsIgnoreCase("sethome") || function.equalsIgnoreCase("sh"))
 						{
-							this.guilds.get(guildIndex).setPerSetHome(rank);
+							this.guilds.get(guildIndex).setPerm("set home", rank);
 							line = "Set home permission changed to rank " + rank;
 						}
 						else if (function.equalsIgnoreCase("usechest") || function.equalsIgnoreCase("uc"))
 						{
-							this.guilds.get(guildIndex).setPerChest(rank);
+							this.guilds.get(guildIndex).setPerm("use chest", rank);
 							line = "Use chest permission changed to rank " + rank;
 						}
 						else if (function.equalsIgnoreCase("useworkbench") || function.equalsIgnoreCase("uw"))
 						{
-							this.guilds.get(guildIndex).setPerWorkbench(rank);
+							this.guilds.get(guildIndex).setPerm("use workbench", rank);
 							line = "Use workbench permission changed to rank " + rank;
 						}
 						else if (function.equalsIgnoreCase("usefurnace") || function.equalsIgnoreCase("uf"))
 						{
-							this.guilds.get(guildIndex).setPerFurnace(rank);
+							this.guilds.get(guildIndex).setPerm("use furnace", rank);
 							line = "Use furnace permission changed to rank " + rank;
+						}
+						else if (function.equalsIgnoreCase("usedispenser") || function.equalsIgnoreCase("ud"))
+						{
+							this.guilds.get(guildIndex).setPerm("use dispenser", rank);
+							line = "Use dispenser permission changed to rank " + rank;
+						}
+						else if (function.equalsIgnoreCase("eatcake") || function.equalsIgnoreCase("ec"))
+						{
+							this.guilds.get(guildIndex).setPerm("eat cake", rank);
+							line = "Eat cake permission changed to rank " + rank;
+						}
+						else if (function.equalsIgnoreCase("opendoors") || function.equalsIgnoreCase("od"))
+						{
+							this.guilds.get(guildIndex).setPerm("open doors", rank);
+							line = "Open doors permission changed to rank " + rank;
+						}
+						else if (function.equalsIgnoreCase("pulllevers") || function.equalsIgnoreCase("pl"))
+						{
+							this.guilds.get(guildIndex).setPerm("pull levers", rank);
+							line = "Pull levers permission changed to rank " + rank;
+						}
+						else if (function.equalsIgnoreCase("pushbuttons") || function.equalsIgnoreCase("pb"))
+						{
+							this.guilds.get(guildIndex).setPerm("push buttons", rank);
+							line = "Push buttons permission changed to rank " + rank;
+						}
+						else if (function.equalsIgnoreCase("triggertnt") || function.equalsIgnoreCase("tt"))
+						{
+							this.guilds.get(guildIndex).setPerm("trigger tnt", rank);
+							line = "Trigger TNT permission changed to rank " + rank;
 						}
 						else if (function.equalsIgnoreCase("color") || function.equalsIgnoreCase("clr"))
 						{
@@ -413,7 +445,7 @@ public final class GHolder {
 						found = true;
 					if (plr.getName().equalsIgnoreCase(adderName))
 					{
-						if (plr.getRank() >= fac.getPerInvite() || fac.isPlayerAdmin(plr.getName()))
+						if (plr.getRank() >= fac.getPerm("invite") || fac.isPlayerAdmin(plr.getName()))
 							hasRank = true;
 					}
 				}
@@ -478,7 +510,7 @@ public final class GHolder {
 						kickerRank = fac.getPlayers().get(i).getRank();
 					}
 				}
-				if ((index != -1 && kickerRank != -2 && kickeeRank != -2 && kickerRank > kickeeRank && kickerRank >= fac.getPerKick()) || fac.isPlayerAdmin(kickerName))
+				if ((index != -1 && kickerRank != -2 && kickeeRank != -2 && kickerRank > kickeeRank && kickerRank >= fac.getPerm("kick")) || fac.isPlayerAdmin(kickerName))
 				{
 					fac.getPlayers().remove(index);
 					fac.getArea().areaSize(fac.getPlayers().size());
@@ -567,6 +599,7 @@ public final class GHolder {
 		if (!found)
 		{
 			Guild guildToAdd = new Guild(guildName);
+			guildToAdd = this.initiatePermissons(guildToAdd);
 			guildToAdd.addAdmin(playerName);
 			guildToAdd.promotePlayer(playerName, 100);
 			guildToAdd.setName(guildName);
@@ -607,6 +640,7 @@ public final class GHolder {
 		if (!found)
 		{
 			Guild guildToAdd = new Guild(guildName);
+			guildToAdd = this.initiatePermissons(guildToAdd);
 			if (guildToAdd.loadFromFile(guildName) == true)
 			{
 				this.guilds.add(guildToAdd);
@@ -618,6 +652,27 @@ public final class GHolder {
 		else
 			line = "[Guilds] " + guildName + " already exists!";
 		return line;
+	}
+	
+	public Guild initiatePermissons(Guild guild)
+	{
+		guild.setPerm("invite", 10);
+		guild.setPerm("kick", 10);
+		guild.setPerm("promote", 10);
+		guild.setPerm("demote", 10);
+		guild.setPerm("build", 10);
+		guild.setPerm("destroy", 10);
+		guild.setPerm("set home", 10);
+		guild.setPerm("use chest", 10);
+		guild.setPerm("use workbench", 10);
+		guild.setPerm("use furnace", 10);
+		guild.setPerm("use dispenser", 10);
+		guild.setPerm("eat cake", 10);
+		guild.setPerm("open doors", 10);
+		guild.setPerm("pull levers", 10);
+		guild.setPerm("push buttons", 10);
+		guild.setPerm("trigger tnt", 10);
+		return guild;
 	}
 	
 	public String activateGuild(String name)
@@ -783,7 +838,7 @@ public final class GHolder {
 			{
 				if(player.getName().equals(name))
 				{
-					if (player.getRank() >= guild.getPerSetHome() || guild.isPlayerAdmin(name))
+					if (player.getRank() >= guild.getPerm("set home") || guild.isPlayerAdmin(name))
 					{
 						guild.getGuildArea().xzSet(x, z);
 						guild.getGuildArea().areaSize(guild.getPlayers().size());

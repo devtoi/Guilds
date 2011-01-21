@@ -307,14 +307,14 @@ public class GPlayerListener extends PlayerListener{
 									{
 										if (guild.hasMember(split[2]))
 										{
-											if ((guild.getPlayerRank(player.getName()) > guild.getPlayerRank(split[2]) && guild.getPlayerRank(player.getName()) >= guild.getPerPromote()) || guild.isPlayerAdmin(split[2]))
+											if ((guild.getPlayerRank(player.getName()) > guild.getPlayerRank(split[2]) && guild.getPlayerRank(player.getName()) >= guild.getPerm("promote")) || guild.isPlayerAdmin(split[2]))
 											{
 												success = true;
 												guild.promotePlayer(split[2], player.getName());
-												// TODO dsal
+												// send promote message
 											}
 											else
-												line = "Insufficent rank to promote " + gholder.playerOnline(split[2]) + ", rank " + guild.getPerPromote() + " needed";
+												line = "Insufficent rank to promote " + gholder.playerOnline(split[2]) + ", rank " + guild.getPerm("promote") + " needed";
 										}
 										else
 											line = gholder.playerOnline(split[2]) + " is not in " + guild.getName();
@@ -351,14 +351,14 @@ public class GPlayerListener extends PlayerListener{
 											int demoteeRank = guild.getPlayerRank(split[2]);
 											if (demoteeRank >= 0)
 											{
-												if ((demoterRank > demoteeRank && demoterRank >= guild.getPerDemote()) || guild.isPlayerAdmin(split[2]))
+												if ((demoterRank > demoteeRank && demoterRank >= guild.getPerm("demote")) || guild.isPlayerAdmin(split[2]))
 												{
 													success = true;
 													guild.demotePlayer(split[2], player.getName());
 													// TODO send demote message
 												}
 												else
-													line = "Insufficent rank to demote " + gholder.playerOnline(split[2]) + ", rank " + guild.getPerDemote() + " needed";;
+													line = "Insufficent rank to demote " + gholder.playerOnline(split[2]) + ", rank " + guild.getPerm("promote") + " needed";;
 											}
 											else
 												line = "Can not demote " + gholder.playerOnline(split[2]) + " to negative rank!";
@@ -406,16 +406,22 @@ public class GPlayerListener extends PlayerListener{
 						if (index > -1)
 						{
 							player.sendMessage("Permission list for " + gholder.getPlayerGuildWithColor(player.getName()) + ":");
-							player.sendMessage("Invite: " + gholder.getGuilds().get(index).getPerInvite());
-							player.sendMessage("Kick: " + gholder.getGuilds().get(index).getPerKick());
-							player.sendMessage("Promote: " + gholder.getGuilds().get(index).getPerPromote());
-							player.sendMessage("Demote: " + gholder.getGuilds().get(index).getPerDemote());
-							player.sendMessage("Build in guild area: " + gholder.getGuilds().get(index).getPerBuild());
-							player.sendMessage("Destroy in guild area: " + gholder.getGuilds().get(index).getPerDestroy());
-							player.sendMessage("Set home: " + gholder.getGuilds().get(index).getPerSetHome());
-							player.sendMessage("Use chest: " + gholder.getGuilds().get(index).getPerChest());
-							player.sendMessage("Use workbench: " + gholder.getGuilds().get(index).getPerWorkbench());
-							player.sendMessage("Use furnace: " + gholder.getGuilds().get(index).getPerFurnace());
+							player.sendMessage("Invite: " + gholder.getGuilds().get(index).getPerm("invite"));
+							player.sendMessage("Kick: " + gholder.getGuilds().get(index).getPerm("kick"));
+							player.sendMessage("Promote: " + gholder.getGuilds().get(index).getPerm("promote"));
+							player.sendMessage("Demote: " + gholder.getGuilds().get(index).getPerm("demote"));
+							player.sendMessage("Build in guild area: " + gholder.getGuilds().get(index).getPerm("build"));
+							player.sendMessage("Destroy in guild area: " + gholder.getGuilds().get(index).getPerm("destroy"));
+							player.sendMessage("Set home: " + gholder.getGuilds().get(index).getPerm("set home"));
+							player.sendMessage("Use chest: " + gholder.getGuilds().get(index).getPerm("use chest"));
+							player.sendMessage("Use workbench: " + gholder.getGuilds().get(index).getPerm("use workbench"));
+							player.sendMessage("Use furnace: " + gholder.getGuilds().get(index).getPerm("use furnace"));
+							player.sendMessage("Use dispenser: " + gholder.getGuilds().get(index).getPerm("use dispenser"));
+							player.sendMessage("Eat cake: " + gholder.getGuilds().get(index).getPerm("eat cake"));
+							player.sendMessage("Open doors: " + gholder.getGuilds().get(index).getPerm("open doors"));
+							player.sendMessage("Pull levers: " + gholder.getGuilds().get(index).getPerm("pull levers"));
+							player.sendMessage("Push buttons: " + gholder.getGuilds().get(index).getPerm("push buttons"));
+							player.sendMessage("Trigger TNT: " + gholder.getGuilds().get(index).getPerm("trigger tnt"));
 						}
 					}
 					else 
