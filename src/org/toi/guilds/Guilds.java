@@ -22,7 +22,7 @@ public class Guilds extends JavaPlugin{
 	    public Guilds(PluginLoader pluginLoader, Server instance, PluginDescriptionFile desc, File folder, File plugin, ClassLoader cLoader) {
 	        super(pluginLoader, instance, desc, folder, plugin, cLoader);
 	        name = "Guilds";
-	        version = "v1.1.2 (Durslar)";
+	        version = "v1.1.6 (Durslar)";
 	        GHolder.plugin = this;
 
 	        registerEvents();
@@ -72,7 +72,7 @@ public class Guilds extends JavaPlugin{
 	    }
 
 	    private void registerEvents() {
-	        getServer().getPluginManager().registerEvent(Event.Type.PLAYER_MOVE, playerListener, Priority.Normal, this);
+	        getServer().getPluginManager().registerEvent(Event.Type.PLAYER_MOVE, playerListener, Priority.Highest, this);
 	        getServer().getPluginManager().registerEvent(Event.Type.PLAYER_COMMAND, playerListener, Priority.Normal, this);
 	        getServer().getPluginManager().registerEvent(Event.Type.BLOCK_DAMAGED, blockListener, Priority.Normal, this);
 	        getServer().getPluginManager().registerEvent(Event.Type.BLOCK_PLACED, blockListener, Priority.Normal, this);
@@ -81,6 +81,7 @@ public class Guilds extends JavaPlugin{
 
 	    public void initiateGuildCommands()
 	    {
+	        gholder.addCmd("cmd", "", "Shows this list");
 	    	gholder.addCmd("create", "[guildname] [kind]", "Adds an empty guild with you as admin (leaving your old one)");
 	        gholder.addCmd("removeany", "[guild]", "Removes any guild");
 	        gholder.addCmd("kinds", "", "Shows a list of avaliable guild kinds");
@@ -114,6 +115,5 @@ public class Guilds extends JavaPlugin{
 	        gholder.addCmd("pstart", "[partyname]", "Starts a party");
 	        gholder.addCmd("pjoin", "[party]", "Joins a party");
 	        gholder.addCmd("pleave", "", "Leaves a party");
-	        gholder.addCmd("cmd", "", "Shows this list");
 	    }
 }

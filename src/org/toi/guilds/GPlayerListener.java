@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.craftbukkit.CraftWorld;
 
 
 public class GPlayerListener extends PlayerListener{
@@ -22,20 +23,35 @@ public class GPlayerListener extends PlayerListener{
 		
 		for (Guild guild : gholder.getGuilds())
 		{
-			if (guild.isInArea(player.getLocation().getX(), player.getLocation().getZ()))
+			// Check if the area is accessible
+			if (!guild.getArea().isAccessible())
 			{
-				if (gholder.getPlayerGuild(player.getName()).equalsIgnoreCase(guild.getName()))
+				// Check if player is in the guild area
+				if (guild.isInArea(player.getLocation().getX(), player.getLocation().getZ()))
 				{
-					stop = false;
-					break;
+					// If the player is in the guild allow him access, else not
+					if (gholder.getPlayerGuild(player.getName()).equalsIgnoreCase(guild.getName()))
+					{
+						stop = false;
+						break;
+					}
+					else
+						stop = true;
 				}
-				else
-					stop = true;
 			}
 		}
+		// If player was not allowed access take him back to where he came from
 		if (stop)
 		{
+			// Workaround provided by DarkGrave
+			if(!((CraftWorld)player.getWorld()).getHandle().A.a(event.getFrom().getBlockX() >> 4, event.getFrom().getBlockZ() >> 4))
+			{
+			    ((CraftWorld)player.getWorld()).getHandle().A.d(event.getFrom().getBlockX() >> 4, event.getFrom().getBlockZ() >> 4);
+			}
+
 			player.teleportTo(event.getFrom());
+			event.setTo(event.getFrom());
+			event.setCancelled(true);
 		}
     }
 	
@@ -44,6 +60,7 @@ public class GPlayerListener extends PlayerListener{
 		Player player = event.getPlayer();
 		String[] split = event.getMessage().split(" ");
 		
+		// Verify that this is a guilds command
 		if (split[0].equalsIgnoreCase("/guild") || split[0].equalsIgnoreCase("/gg"))
 		{
 			if (split.length >= 2)
@@ -55,7 +72,7 @@ public class GPlayerListener extends PlayerListener{
 						if (split.length > 3)
 						{
 							if (!split[2].equals(""))
-								player.sendMessage(gholder.addGuild(split[2], player.getName(), split [2]));
+								player.sendMessage(gholder.addGuild(split[2], player.getName(), split[3]));
 							else
 								player.sendMessage(GHolder.gString() + "No guild name defined");
 						}
@@ -65,10 +82,7 @@ public class GPlayerListener extends PlayerListener{
 						}
 					}
 					else 
-					{
 						player.sendMessage(GHolder.gString() + "No guild name defined!");
-					}
-					
 				}
 				else if (split[1].equalsIgnoreCase("save") && gholder.getTps().canPlayerUseCommand(player.getName(), "save"))
 				{
@@ -77,11 +91,11 @@ public class GPlayerListener extends PlayerListener{
 						if (!split[2].equals(""))
 						{
 							boolean found = false;
-							for (Guild fac : gholder.getGuilds())
+							for (Guild guild : gholder.getGuilds())
 							{
-								if (fac.getName().equalsIgnoreCase(split[2]))
+								if (guild.getName().equalsIgnoreCase(split[2]))
 								{	
-									fac.saveToFile();
+									guild.saveToFile();
 									found = true;
 								}
 							}
@@ -731,11 +745,12 @@ public class GPlayerListener extends PlayerListener{
 					else
 						gholder.printAvaliableCommands(player, 1);
 				}
+				else
+					player.sendMessage(GHolder.gString() + "Usage: /guild [function]");
 			}
-			else
-				player.sendMessage(GHolder.gString() + "Usage: /guild [function]");
 			event.setCancelled(true);
 		}
+		// Guild chat
 		else if(split[0].equalsIgnoreCase("/g"))
 		{
 			if (split.length > 1)
@@ -764,6 +779,7 @@ public class GPlayerListener extends PlayerListener{
 			}
 			event.setCancelled(true);
 		}
+		// Party chat
 		else if(split[0].equalsIgnoreCase("/p"))
 		{
 			if (split.length > 1)

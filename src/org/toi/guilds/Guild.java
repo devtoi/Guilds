@@ -91,6 +91,17 @@ class Guild {
 		return false;
 	}
 	
+	public void promotePlayer(String admin, int amount)
+	{
+		for (GPlayer gp : this.players)
+		{
+			if (gp.getName().equalsIgnoreCase(admin))
+			{
+				gp.setRank(amount);
+			}
+		}
+	}
+	
 	public boolean demotePlayer(String playerToDemote, String demoterName)
 	{
 		for (GPlayer gp : this.players)
@@ -446,18 +457,15 @@ class Guild {
 			}
 			catch (IOException e)
 			{
-				e.printStackTrace();
 				return false;
 			}
 			finally
 			{
 				br.close();
-				//area.loadFromFile(name); // Not needed any more?
 			}
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
 			return false;
 		}
 	}
@@ -678,8 +686,9 @@ class Guild {
 	
 	private void sendRequItems (Player player, int id, int gAmount, int kAmount)
 	{
-		// TODO edit this String itemName = etc.getDataSource().getItem(id);
-		player.sendMessage(/*itemName*/ String.valueOf(id) + " - " + gAmount + "/" + kAmount);
+		String itemName = Material.getMaterial(id).toString();
+		if (itemName != null)
+			player.sendMessage(itemName + " - " + gAmount + "/" + kAmount);
 	}
 	
 	public int getPlayerRank(String playerName)

@@ -337,7 +337,7 @@ public final class GHolder {
 					if (guild.isJoinable())
 					{
 						this.pendingGuildInvites.add(playerName.toLowerCase() + ";" + guildName.toLowerCase());
-						line = "Join " + guild.getColor() + guild.getName() + ChatColor.YELLOW + "? Type /gjyes or /gjno";
+						line = "Join " + guild.getColor() + guild.getName() + ChatColor.YELLOW + "? Type /gg accept or /gg decline";
 						break;
 					}
 					else
@@ -421,7 +421,7 @@ public final class GHolder {
 				{
 					this.pendingGuildInvites.add(playerName.toLowerCase() + ";" + guildName.toLowerCase());
 					this.sendMsgToPlayer(playerName, gString() + this.playerOnline(adderName) + " invited you to " + fac.getColor() + fac.getName() +
-											ChatColor.YELLOW + "! Type /gjyes or /gjno");
+											ChatColor.YELLOW + "! Type /gg accept or /gg decline");
 					line = 	gString() + "You invited " + playerOnline(playerName) +
 							ChatColor.YELLOW + " to " + facColor + guildName + ChatColor.YELLOW + "!";
 				}
@@ -568,6 +568,7 @@ public final class GHolder {
 		{
 			Guild guildToAdd = new Guild(guildName);
 			guildToAdd.addAdmin(playerName);
+			guildToAdd.promotePlayer(playerName, 100);
 			guildToAdd.setName(guildName);
 			guildToAdd.addPlayer(playerName);
 			guildToAdd.setKind(this.getGuildKindFromName(guildKind));

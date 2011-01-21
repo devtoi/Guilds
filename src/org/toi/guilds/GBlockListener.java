@@ -14,6 +14,10 @@ public class GBlockListener extends BlockListener{
     	this.gholder = gholder;
     }
     
+    public void onBlockInteract(BlockInteractEvent event) {
+    	
+    }
+    
 	public void onBlockPlace(BlockPlaceEvent event)
 	{
 		Player player = event.getPlayer();
@@ -31,19 +35,20 @@ public class GBlockListener extends BlockListener{
 						{
 							if (gp.getRank() >= guild.getPerBuild() || guild.isPlayerAdmin(gp.getName()))
 							{
+								event.setCancelled(false);
 								break;
 							}
 							else
-							{
 								event.setCancelled(true);
-								break;
-							}
 						}
 						else
-						{
 							event.setCancelled(true);
-						}
 					}
+					break;
+				}
+				else
+				{
+					event.setCancelled(true);
 					break;
 				}
 			}
@@ -67,6 +72,7 @@ public class GBlockListener extends BlockListener{
 						{
 							if (gp.getRank() >= guild.getPerDestroy() || guild.isPlayerAdmin(gp.getName()))
 							{
+								event.setCancelled(false);
 								break;
 							}
 							else
@@ -84,6 +90,7 @@ public class GBlockListener extends BlockListener{
 				else
 				{
 					event.setCancelled(true);
+					break;
 				}
 			}
 		}
