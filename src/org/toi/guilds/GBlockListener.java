@@ -18,108 +18,89 @@ public class GBlockListener extends BlockListener{
     
     public void onBlockInteract(BlockInteractEvent event)
     {
-    	if(!(event.getEntity() instanceof Player)) {
-			return;
-		}
-    	Player player = (Player)event.getEntity();
-    	Block block = event.getBlock();
-    	Material mat = block.getType();
-    	
-    	if (mat.equals(Material.BURNING_FURNACE) || mat.equals(Material.CHEST) || mat.equals(Material.WORKBENCH) || mat.equals(Material.LEVER) ||
-    			mat.equals(Material.CAKE_BLOCK) || mat.equals(Material.DISPENSER) || mat.equals(Material.FURNACE) || mat.equals(Material.STONE_BUTTON) ||
-    			mat.equals(Material.WOODEN_DOOR) || mat.equals(Material.POWERED_MINECART) || mat.equals(Material.WOOD_DOOR) || mat.equals(Material.TNT))
+    	if (!event.isCancelled())
     	{
-	    	for (Guild guild : gholder.getGuilds())
-			{
-				if (guild.isInArea(block.getX(), block.getZ()))
+	    	if(!(event.getEntity() instanceof Player)) {
+				return;
+			}
+	    	Player player = (Player)event.getEntity();
+	    	Block block = event.getBlock();
+	    	Material mat = block.getType();
+
+    		boolean canBuild = false;
+	    	if (mat.equals(Material.BURNING_FURNACE) || mat.equals(Material.CHEST) || mat.equals(Material.WORKBENCH) || mat.equals(Material.LEVER) ||
+	    			mat.equals(Material.CAKE_BLOCK) || mat.equals(Material.DISPENSER) || mat.equals(Material.FURNACE) || mat.equals(Material.STONE_BUTTON) ||
+	    			mat.equals(Material.WOODEN_DOOR) || mat.equals(Material.POWERED_MINECART) || mat.equals(Material.WOOD_DOOR) || mat.equals(Material.TNT))
+	    	{
+		    	for (Guild guild : gholder.getGuilds())
 				{
-					if (guild.getPlayers().size() > 0)
+					if (guild.isInArea(block.getX(), block.getZ()))
 					{
-						for (GPlayer gp: guild.getPlayers())
+						if (guild.getPlayers().size() > 0)
 						{
-							if (player.getName().equalsIgnoreCase(gp.getName()))
+							for (GPlayer gp: guild.getPlayers())
 							{
-								if (guild.isPlayerAdmin(gp.getName()))
+								if (player.getName().equalsIgnoreCase(gp.getName()))
 								{
-									event.setCancelled(false);
-									return;
-								}
-								if (mat.equals(Material.BURNING_FURNACE) || mat.equals(Material.FURNACE))
-								{
-									if (gp.getRank() >= guild.getPerm("use furnace"))
-										event.setCancelled(false);
-									else
-										event.setCancelled(true);
-								}
-								else if (mat.equals(Material.CHEST))
-								{
-									if (gp.getRank() >= guild.getPerm("use chest"))
-										event.setCancelled(false);
-									else
-										event.setCancelled(true);
-								}
-								else if (mat.equals(Material.WORKBENCH))
-								{
-									if (gp.getRank() >= guild.getPerm("use workbench"))
-										event.setCancelled(false);
-									else
-										event.setCancelled(true);
-								}
-								else if (mat.equals(Material.DISPENSER))
-								{
-									if (gp.getRank() >= guild.getPerm("use dispenser"))
-										event.setCancelled(false);
-									else
-										event.setCancelled(true);
-								}
-								else if (mat.equals(Material.CAKE_BLOCK))
-								{
-									if (gp.getRank() >= guild.getPerm("eat cake"))
-										event.setCancelled(false);
-									else
-										event.setCancelled(true);
-								}
-								else if (mat.equals(Material.WOOD_DOOR) || mat.equals(Material.WOODEN_DOOR))
-								{
-									if (gp.getRank() >= guild.getPerm("open doors"))
-										event.setCancelled(false);
-									else
-										event.setCancelled(true);
-								}
-								else if (mat.equals(Material.LEVER))
-								{
-									if (gp.getRank() >= guild.getPerm("pull levers"))
-										event.setCancelled(false);
-									else
-										event.setCancelled(true);
-								}
-								else if (mat.equals(Material.STONE_BUTTON))
-								{
-									if (gp.getRank() >= guild.getPerm("push buttons"))
-										event.setCancelled(false);
-									else
-										event.setCancelled(true);
-								}
-								else if (mat.equals(Material.TNT))
-								{
-									if (gp.getRank() >= guild.getPerm("trigger tnt"))
-										event.setCancelled(false);
-									else
-										event.setCancelled(true);
+									if (guild.isPlayerAdmin(gp.getName()))
+									{
+										return;
+									}
+									if (mat.equals(Material.BURNING_FURNACE) || mat.equals(Material.FURNACE))
+									{
+										if (gp.getRank() >= guild.getPerm("use furnace"))
+											canBuild = true;
+									}
+									else if (mat.equals(Material.CHEST))
+									{
+										if (gp.getRank() >= guild.getPerm("use chest"))
+											canBuild = true;
+									}
+									else if (mat.equals(Material.WORKBENCH))
+									{
+										if (gp.getRank() >= guild.getPerm("use workbench"))
+											canBuild = true;
+									}
+									else if (mat.equals(Material.DISPENSER))
+									{
+										if (gp.getRank() >= guild.getPerm("use dispenser"))
+											canBuild = true;
+									}
+									else if (mat.equals(Material.CAKE_BLOCK))
+									{
+										if (gp.getRank() >= guild.getPerm("eat cake"))
+											canBuild = true;
+									}
+									else if (mat.equals(Material.WOOD_DOOR) || mat.equals(Material.WOODEN_DOOR))
+									{
+										if (gp.getRank() >= guild.getPerm("open doors"))
+											canBuild = true;
+									}
+									else if (mat.equals(Material.LEVER))
+									{
+										if (gp.getRank() >= guild.getPerm("pull levers"))
+											canBuild = true;
+									}
+									else if (mat.equals(Material.STONE_BUTTON))
+									{
+										if (gp.getRank() >= guild.getPerm("push buttons"))
+											canBuild = true;
+									}
+									else if (mat.equals(Material.TNT))
+									{
+										if (gp.getRank() >= guild.getPerm("trigger tnt"))
+											canBuild = true;
+									}
+									break;
 								}
 							}
-							else
-								event.setCancelled(true);
+							break;
 						}
-						break;
-					}
-					else
-					{
-						event.setCancelled(true);
-						break;
 					}
 				}
-			}
+		    	if (!canBuild)
+		    		event.setCancelled(true);
+	    	}
     	}
     }
     
@@ -127,36 +108,32 @@ public class GBlockListener extends BlockListener{
 	{
 		Player player = event.getPlayer();
 		Block blockPlaced = event.getBlock();
-		
-		for (Guild guild : gholder.getGuilds())
+		boolean canBuild = false;
+		if (!event.isCancelled())
 		{
-			if (guild.isInArea(blockPlaced.getX(), blockPlaced.getZ()))
+			for (Guild guild : gholder.getGuilds())
 			{
-				if (guild.getPlayers().size() > 0)
+				if (guild.isInArea(blockPlaced.getX(), blockPlaced.getZ()))
 				{
-					for (GPlayer gp: guild.getPlayers())
+					if (guild.getPlayers().size() > 0)
 					{
-						if (player.getName().equalsIgnoreCase(gp.getName()))
+						for (GPlayer gp: guild.getPlayers())
 						{
-							if (gp.getRank() >= guild.getPerm("build") || guild.isPlayerAdmin(gp.getName()))
+							if (player.getName().equalsIgnoreCase(gp.getName()))
 							{
-								event.setCancelled(false);
-								break;
+								if (gp.getRank() >= guild.getPerm("build") || guild.isPlayerAdmin(gp.getName()))
+								{
+									canBuild = true;
+									break;
+								}
 							}
-							else
-								event.setCancelled(true);
 						}
-						else
-							event.setCancelled(true);
+						break;
 					}
-					break;
-				}
-				else
-				{
-					event.setCancelled(true);
-					break;
 				}
 			}
+			if (!canBuild)
+				event.setCancelled(true);
 		}
 	}
 	
@@ -164,39 +141,34 @@ public class GBlockListener extends BlockListener{
 	{
 		Player player = event.getPlayer();
 		Block block = event.getBlock();
-		if (event.getDamageLevel().equals(BlockDamageLevel.BROKEN))
-		for (Guild guild : gholder.getGuilds())
+		if (!event.isCancelled())
 		{
-			if (guild.isInArea(block.getX(), block.getZ()))
+			if (event.getDamageLevel().equals(BlockDamageLevel.BROKEN))
 			{
-				if (guild.getPlayers().size() > 0)
+				boolean canBuild = false;
+				for (Guild guild : gholder.getGuilds())
 				{
-					for (GPlayer gp: guild.getPlayers())
+					if (guild.isInArea(block.getX(), block.getZ()))
 					{
-						if (player.getName().equalsIgnoreCase(gp.getName()))
+						if (guild.getPlayers().size() > 0)
 						{
-							if (gp.getRank() >= guild.getPerm("destroy") || guild.isPlayerAdmin(gp.getName()))
+							for (GPlayer gp: guild.getPlayers())
 							{
-								event.setCancelled(false);
-								break;
+								if (player.getName().equalsIgnoreCase(gp.getName()))
+								{
+									if (gp.getRank() >= guild.getPerm("destroy") || guild.isPlayerAdmin(gp.getName()))
+									{
+										canBuild = true;
+										break;
+									}
+								}
 							}
-							else
-							{
-								event.setCancelled(true);
-							}
-						}
-						else
-						{
-							event.setCancelled(true);
+							break;
 						}
 					}
-					break;
 				}
-				else
-				{
+				if (!canBuild)
 					event.setCancelled(true);
-					break;
-				}
 			}
 		}
 	}
