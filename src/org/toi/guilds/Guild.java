@@ -550,6 +550,7 @@ class Guild {
 		if (kind.hasEnoughForNextLevel(this.score, this.items))
 		{
 			score++;
+			while(doUpgrade());
 			this.saveToFile();
 			return true;
 		}
@@ -613,12 +614,12 @@ class Guild {
 	}
 
 	public void turnInItems(Player player, Material mat, int amount)
-	{/*
+	{
 		boolean hasItem = false;
 		int itemPlace = -1;
 		for (int i = 0; i < this.items.size(); i++)
 		{
-			if (this.items.get(i).getItemIndex() == itemIndex)
+			if (this.items.get(i).getItemIndex() == mat.getId())
 			{
 				hasItem = true;
 				itemPlace = i;
@@ -627,9 +628,9 @@ class Guild {
 		}
 		
 		if (!hasItem)
-			this.items.add(new ItemNeeded(itemIndex, amount));
+			this.items.add(new ItemNeeded(mat.getId(), amount));
 		else
-			this.items.get(itemPlace).increaseAmount(amount);*/
+			this.items.get(itemPlace).increaseAmount(amount);
 	}
 	
 	public boolean addAdmin (String name)

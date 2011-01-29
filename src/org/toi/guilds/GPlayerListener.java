@@ -26,7 +26,9 @@ public class GPlayerListener extends PlayerListener{
     			{
     				if (gp.getName().equalsIgnoreCase(event.getPlayer().getName()))
     				{
-    					event.setFormat(guild.getColor() + "[" + guild.getName() + "]" + ChatColor.WHITE + event.getFormat());
+    					String line = guild.getColor() + GHolder.chatFormat + ChatColor.WHITE + event.getFormat();
+    					line = line.replace("%n", guild.getName());
+    					event.setFormat(line);
     					return;
     				}
     			}
@@ -47,14 +49,21 @@ public class GPlayerListener extends PlayerListener{
 				// Check if player is in the guild area
 				if (guild.isInArea(player.getLocation().getX(), player.getLocation().getZ()))
 				{
+					String playerGuild = gholder.getPlayerGuild(player.getName()); 
 					// If the player is in the guild allow him access, else not
-					if (gholder.getPlayerGuild(player.getName()).equalsIgnoreCase(guild.getName()))
+					if (playerGuild != null)
 					{
-						stop = false;
-						break;
+						if (playerGuild.equalsIgnoreCase(guild.getName()))
+						{
+							stop = false;
+							break;
+						}
+						else
+							stop = true;
 					}
 					else
 						stop = true;
+					break;
 				}
 			}
 		}
@@ -90,14 +99,16 @@ public class GPlayerListener extends PlayerListener{
 						if (split.length > 3)
 						{
 							if (!split[2].equals(""))
-								player.sendMessage(gholder.addGuild(split[2], player.getName(), split[3]));
+							{
+								String line = gholder.addGuild(split[2], player, split[3]);
+								if (line != null)
+									player.sendMessage(line);
+							}
 							else
 								player.sendMessage(GHolder.gString() + "No guild name defined");
 						}
 						else
-						{
 							player.sendMessage(GHolder.gString() + "You need to define a guildkind!");
-						}
 					}
 					else 
 						player.sendMessage(GHolder.gString() + "No guild name defined!");
@@ -411,7 +422,7 @@ public class GPlayerListener extends PlayerListener{
 				else if (split[1].equalsIgnoreCase("permissions") && gholder.getTps().canPlayerUseCommand(player.getName(), "permissions"))
 				{
 					String playerGuild = gholder.getPlayerGuild(player.getName());
-					if (!playerGuild.equalsIgnoreCase("Unknown guild"))
+					if (playerGuild != null)
 					{
 						int index = -1;
 						for (int i = 0; i < gholder.getGuilds().size(); i++)
@@ -512,7 +523,7 @@ public class GPlayerListener extends PlayerListener{
 					}
 					else
 					{
-						if (gholder.getPlayerGuild(player.getName()).equalsIgnoreCase("unknown guild"))
+						if (gholder.getPlayerGuild(player.getName()) != null)
 						{
 							player.sendMessage(GHolder.gString() + "You don't have a guild yet!");
 						}
@@ -571,7 +582,7 @@ public class GPlayerListener extends PlayerListener{
 					}
 					else
 					{
-						if (gholder.getPlayerGuild(player.getName()).equalsIgnoreCase("unknown guild"))
+						if (gholder.getPlayerGuild(player.getName()) != null)
 						{
 							player.sendMessage(GHolder.gString() + "You don't have a guild yet!");
 						}
@@ -602,42 +613,46 @@ public class GPlayerListener extends PlayerListener{
 				else if(split[1].equalsIgnoreCase("upgrade") && gholder.getTps().canPlayerUseCommand(player.getName(), "upgrade"))
 				{
 					String playerGuild = gholder.getPlayerGuild(player.getName());
-					for (Guild guild : gholder.getGuilds())
+					if (playerGuild != null)
 					{
-						if (guild.getName().equalsIgnoreCase(playerGuild))
+						for (Guild guild : gholder.getGuilds())
 						{
-							if (guild.getScore() < guild.getKind().getMaxLevel() || guild.getKind().getMaxLevel() == -1)
+							if (guild.getName().equalsIgnoreCase(playerGuild))
 							{
-								if (guild.doUpgrade())
+								if (guild.getScore() < guild.getKind().getMaxLevel() || guild.getKind().getMaxLevel() == -1)
 								{
-									player.sendMessage(GHolder.gString() + "Upgraded " + guild.getColor() + guild.getName() + ChatColor.YELLOW + " to level " + guild.getScore());
+									if (guild.doUpgrade())
+									{
+										player.sendMessage(GHolder.gString() + "Upgraded " + guild.getColor() + guild.getName() + ChatColor.YELLOW + " to level " + guild.getScore());
+									}
+									else
+									{
+										player.sendMessage(GHolder.gString() + "Not enough material to upgrade " + guild.getColor() + guild.getName() + ChatColor.YELLOW + "!");
+									}
 								}
 								else
-								{
-									player.sendMessage(GHolder.gString() + "Not enough material to upgrade " + guild.getColor() + guild.getName() + ChatColor.YELLOW + "!");
-								}
+									player.sendMessage(GHolder.gString() + guild.getColor() + guild.getName() + ChatColor.YELLOW + " have already reached max level");
 							}
-							else
-								player.sendMessage(GHolder.gString() + guild.getColor() + guild.getName() + ChatColor.YELLOW + " have already reached max level");
-							
 						}
 					}
-					player.sendMessage(GHolder.gString() + "You are not in any guild");
-					
+					else
+						player.sendMessage(GHolder.gString() + "You are not in any guild");
 				}
 				else if(split[1].equalsIgnoreCase("nextlevel") && gholder.getTps().canPlayerUseCommand(player.getName(), "nextlevel"))
 				{
 					String playerGuild = gholder.getPlayerGuild(player.getName());
-					for (Guild guild : gholder.getGuilds())
+					if (playerGuild != null)
 					{
-						if (guild.getName().equalsIgnoreCase(playerGuild))
+						for (Guild guild : gholder.getGuilds())
 						{
-							guild.printNeededItemsToLevel(player);
-							
+							if (guild.getName().equalsIgnoreCase(playerGuild))
+							{
+								guild.printNeededItemsToLevel(player);
+							}
 						}
 					}
-					player.sendMessage(GHolder.gString() + "You are not in any guild");
-					
+					else
+						player.sendMessage(GHolder.gString() + "You are not in any guild");
 				}
 				else if(split[1].equalsIgnoreCase("turnin") && gholder.getTps().canPlayerUseCommand(player.getName(), "turnin"))
 				{
@@ -646,62 +661,60 @@ public class GPlayerListener extends PlayerListener{
 						if (split.length > 3)
 						{
 							String playerGuild = gholder.getPlayerGuild(player.getName());
-							for (Guild guild : gholder.getGuilds())
+							if (playerGuild != null)
 							{
-								if (guild.getName().equalsIgnoreCase(playerGuild))
+								for (Guild guild : gholder.getGuilds())
 								{
-									if (GHolder.isIntNumber(split[2]) && GHolder.isIntNumber(split[3]))
+									if (guild.getName().equalsIgnoreCase(playerGuild))
 									{
-										Material item = Material.getMaterial(split[2]);
-										int amount = Integer.valueOf(split[3]);
-										if (item != null && amount > 0)
+										if (GHolder.isIntNumber(split[2]) && GHolder.isIntNumber(split[3]))
 										{
-											if (gholder.playerHasEnoughItem(player, item, amount))
+											Material item = Material.getMaterial(Integer.valueOf(split[2]));
+											int amount = Integer.valueOf(split[3]);
+											if (item != null && amount > 0)
 											{
-												guild.turnInItems(player, item, amount);
-												gholder.playerTakeItems(player, item, amount);
-												gholder.sendTurninItems(player, item, amount);
-												
-											}
-											else
-											{
-												player.sendMessage(GHolder.gString() + "You don't have enough material to do that!");
-												
-											}
-										}
-										else
-											player.sendMessage(GHolder.gString() + "Values need to be above 0!");
-									}
-									else if (GHolder.isIntNumber(split[3]))
-									{
-										
-										Material item = Material.getMaterial(split[2]);
-										int amount = Integer.valueOf(split[3]);
-										if (item != null)
-										{
-											if (Integer.valueOf(split[3]) > 0)
-											{
-												if (gholder.playerHasEnoughItem(player, item, amount))
+												if (gholder.playerHasItem(player, item, amount))
 												{
 													guild.turnInItems(player, item, amount);
-													gholder.playerTakeItems(player, item, amount);
-													gholder.sendTurninItems(player, item, amount);
-													
+													gholder.playerRemoveItems(player, item, amount);
+													player.sendMessage("You turned in " + amount + " " + item.name());
 												}
 												else
 													player.sendMessage(GHolder.gString() + "You don't have enough material to do that!");
 											}
 											else
-												player.sendMessage(GHolder.gString() + "Amount need to be above 0!");
+												player.sendMessage(GHolder.gString() + "Values need to be above 0!");
+										}
+										else if (GHolder.isIntNumber(split[3]))
+										{
+											Material item = Material.getMaterial(split[2]);
+											int amount = Integer.valueOf(split[3]);
+											if (item != null)
+											{
+												if (Integer.valueOf(split[3]) > 0)
+												{
+													if (gholder.playerHasItem(player, item, amount))
+													{
+														guild.turnInItems(player, item, amount);
+														gholder.playerRemoveItems(player, item, amount);
+														player.sendMessage("You turned in " + amount + " " + item.name());
+													}
+													else
+														player.sendMessage(GHolder.gString() + "You don't have enough material to do that!");
+												}
+												else
+													player.sendMessage(GHolder.gString() + "Amount need to be above 0!");
+											}
+											else
+												player.sendMessage(GHolder.gString() + "Failed to interpret item name");
 										}
 										else
-											player.sendMessage(GHolder.gString() + "Failed to interpret item name");
+											player.sendMessage(GHolder.gString() + "You need to write numbers");
 									}
-									else
-										player.sendMessage(GHolder.gString() + "You need to write numbers");
 								}
 							}
-							player.sendMessage(GHolder.gString() + "You are not in any guild");
+							else
+								player.sendMessage(GHolder.gString() + "You are not in any guild");
 						}
 						else
 							player.sendMessage(GHolder.gString() + "You need do define an amount");
@@ -712,7 +725,7 @@ public class GPlayerListener extends PlayerListener{
 				else if(split[1].equalsIgnoreCase("activate") && gholder.getTps().canPlayerUseCommand(player.getName(), "activate"))
 				{
 					String playerGuild = gholder.getPlayerGuild(player.getName());
-					if (playerGuild.equalsIgnoreCase("unknown guild"))
+					if (playerGuild == null)
 						player.sendMessage(GHolder.gString() + "You are not in any guild");
 					else
 					{

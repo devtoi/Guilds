@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.Material;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.Plugin;
@@ -24,6 +27,8 @@ public final class GHolder {
 	static int guildAreaExpansion = 3;
 	static int guildAreaStartSize = 3;
 	static boolean useChatTag = true;
+	static String chatFormat = "[%n]";
+	static boolean guildCreateCosts = false;
 	private ArrayList<Command> guildCommands = new ArrayList<Command>();
 	static ArrayList<GuildKind> guildKinds = new ArrayList<GuildKind>();
 	private ArrayList<Party> partys = new ArrayList<Party>();
@@ -38,26 +43,45 @@ public final class GHolder {
 		return ChatColor.AQUA + "[Guilds] " + ChatColor.YELLOW;
 	}
 	
-	public boolean playerHasEnoughItem(Player player, Material mat, int amount)
-	{/*
-		PlayerInventory inv = new PlayerInventory(player);
-		if (inv.hasItem(iid, amount))
-			return true;
-		else
-			return false;*/
-		return true;// TODO remove this
+	public boolean playerHasItem (Player player, Material mat, int amount)
+	{
+		PlayerInventory inventory = player.getInventory();
+        ItemStack temp[] = inventory.getContents();
+        int id = mat.getId();
+        int total = 0;
+        ItemStack items[] = temp;
+        for(ItemStack item : items)
+        {
+            if(item != null && item.getTypeId() == id && item.getAmount() > 0)
+                total += item.getAmount();
+        }
+
+        return total >= amount;
 	}
 	
-	public void playerTakeItems(Player player, Material mat, int amount)
-	{/*
-		PlayerInventory inv = new PlayerInventory(player);
-		inv.removeItem(iid, amount);*/
-	}
+	public int playerGetAmountOfItems(Player player, Material mat)
+    {
+		PlayerInventory inventory = player.getInventory();
+        ItemStack temp[] = inventory.getContents();
+        int id = mat.getId();
+        int amount = 0;
+        ItemStack items[] = temp;
+        for(ItemStack item : items)
+        {
+            if(item != null)
+            {
+            	if (item.getTypeId() == id)
+            		amount += item.getAmount();
+            }
+        }
+
+        return amount;
+    }
 	
-	public void sendTurninItems (Player player, Material mat, int kAmount)
-	{/*
-		String itemName = etc.getDataSource().getItem(id);
-		player.sendMessage("You turned in " + kAmount + " " + itemName);*/
+	public void playerRemoveItems(Player player, Material mat, int amount)
+	{
+		PlayerInventory inv = player.getInventory();
+		inv.removeItem(new ItemStack(mat, amount));
 	}
 	
 	public String setGuildHome(Player player) {
@@ -583,11 +607,13 @@ public final class GHolder {
 		return line;
 	}
 	
-	public String addGuild(String guildName, String playerName, String guildKind)
+	public String addGuild(String guildName, Player player, String guildKind)
 	{
 		boolean found = false;
 		String line = "Guild not found!";
 		ChatColor facColor = ChatColor.YELLOW;
+		String playerName = player.getName();
+		
 		for (Guild fac : this.guilds)
 		{
 			if (fac.getName().equalsIgnoreCase(guildName))
@@ -602,18 +628,70 @@ public final class GHolder {
 			Guild guildToAdd = new Guild(guildName);
 			guildToAdd = this.initiatePermissons(guildToAdd);
 			guildToAdd.addAdmin(playerName);
-			guildToAdd.promotePlayer(playerName, 100);
 			guildToAdd.setName(guildName);
 			guildToAdd.addPlayer(playerName);
-			guildToAdd.setKind(this.getGuildKindFromName(guildKind));
-			this.removePlayerFromGuild(this.getPlayerGuild(playerName), playerName);
-			guildToAdd.saveToFile();
-			this.guilds.add(guildToAdd);
-			line = gString() +  guildToAdd.getColor() + guildName + ChatColor.YELLOW + " was added!";
+			guildToAdd.promotePlayer(playerName, 100);
+			GuildKind gk = this.getGuildKindFromName(guildKind);
+			if (gk != null)
+			{
+				guildToAdd.setKind(gk);
+				if (GHolder.guildCreateCosts)
+				{
+					int c = 0;
+					int lc = 0;
+					for (ItemNeeded in : gk.getItemsNeeded())
+					{
+						if (in.getLevel() == 0)
+						{
+							if (playerHasItem(player, Material.getMaterial(in.getItemIndex()), in.getAmount()))
+								c++;
+							lc++;
+						}
+					}
+					if (c != lc)
+					{
+						player.sendMessage(gString() + "Not enough material!");
+						this.printItemsNeededToCreateGuild(player, gk);
+						return null;
+					}
+					else
+					{
+						for (ItemNeeded in : gk.getItemsNeeded())
+						{
+							if (in.getLevel() == 0)
+							{
+								playerRemoveItems(player, Material.getMaterial(in.getItemIndex()), in.getAmount());
+							}
+						}
+					}
+				}
+				this.removePlayerFromGuild(this.getPlayerGuild(playerName), playerName);
+				guildToAdd.saveToFile();
+				this.guilds.add(guildToAdd);
+				line = gString() + guildToAdd.getColor() + guildName + ChatColor.YELLOW + " was created!";
+			}
+			else
+				return gString() + "Invalid guildkind";
 		}
 		else
-			line = gString() +  facColor + guildName + ChatColor.YELLOW + " already exists!";
+			line = gString() + facColor + guildName + ChatColor.YELLOW + " already exists!";
 		return line;
+	}
+	
+	private void printItemsNeededToCreateGuild(Player player, GuildKind gk)
+	{
+		for (ItemNeeded in : gk.getItemsNeeded())
+		{
+			if (in.getLevel() == 0)
+			{
+				String materialName = Material.getMaterial(in.getItemIndex()).name();
+				materialName = materialName.toLowerCase();
+				materialName = materialName.substring(0,1).toUpperCase() + materialName.substring(1, materialName.length());
+				player.sendMessage(materialName + ": " +
+						String.valueOf(this.playerGetAmountOfItems(player, Material.getMaterial(in.getItemIndex())))+
+						"/" + String.valueOf(in.getAmount()));
+			}
+		}
 	}
 	
 	private GuildKind getGuildKindFromName(String gkName)
@@ -864,16 +942,14 @@ public final class GHolder {
 	
 	public String getPlayerGuildWithColor(String name)
 	{
-		String line = "Unknown guild";
 		for(Guild guild : guilds)
 		{
 			if (guild.hasMember(name))
 			{
-				line = guild.getColor() + guild.getName() + ChatColor.YELLOW;
-				break;
+				return guild.getColor() + guild.getName() + ChatColor.YELLOW;
 			}
 		}
-		return line;
+		return null;
 	}
 	
 	public String getPlayerGuild(String name)
@@ -885,7 +961,7 @@ public final class GHolder {
 				return guild.getName();
 			}
 		}
-		return "Unknown guild";
+		return null;
 	}
 	
 	public String getGuild(String name)
@@ -912,9 +988,11 @@ public final class GHolder {
         	System.out.println("[Guilds] Failed to load configuration: "
                     + e.getMessage());
         }
-        guildAreaExpansion = properties.getInt("Guild area expansion rate", 5);
-        guildAreaStartSize = properties.getInt("Guild area start size", 5);
+        guildAreaExpansion = properties.getInt("Guild area expansion rate", guildAreaExpansion);
+        guildAreaStartSize = properties.getInt("Guild area start size", guildAreaStartSize);
         useChatTag = properties.getBoolean("Use guild tag in chat", useChatTag);
+        chatFormat = properties.getString("Chat format", chatFormat);
+        guildCreateCosts = properties.getBoolean("Creating guild do cost", guildCreateCosts);
         properties.save();
 	}
 
